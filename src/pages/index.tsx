@@ -1,39 +1,11 @@
-import { Space_Grotesk } from "next/font/google";
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-});
-
-import { axiosInstance } from "@/lib/axios";
-import { useEffect, useState } from "react";
-import { z } from "zod";
-const taskSchema = z.object({
-  id: z.number(),
-  taskName: z.string().min(1),
-  description: z.string(),
-});
-
-type TaskSchema = z.infer<typeof taskSchema>;
-
+import { useSpaceGrotesk } from "@/fonts/space_grotesk";
+import { useFetchTask } from "@/hooks/fetchingTask";
 export default function Home() {
-  const [tasks, setTasks] = useState<TaskSchema[]>([]);
-
-  useEffect(() => {
-    const fetchingTasks = async () => {
-      try {
-        const response = await axiosInstance.get("/tasks");
-        const getTask = response.data.getTask;
-        setTasks(getTask);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchingTasks();
-  }, []);
-
+  const font = useSpaceGrotesk();
+  const { data: tasks } = useFetchTask();
   return (
     <div
-      className={`h-screen flex flex-col items-center p-10 ${spaceGrotesk.className}`}
+      className={`h-screen flex flex-col items-center p-10 ${font.className}`}
     >
       <h1 className="text-6xl font-bold">TodoShyt</h1>
       <p className="text-xl font-light mt-4">Keep your tasks organized</p>
