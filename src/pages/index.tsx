@@ -24,7 +24,7 @@ export default function Home() {
           ))}
         </div>
       ) : (
-        <p className="text-xl font-light">No task nyet.</p>
+        <p className="text-xl font-light mt-20">No task nyet.</p>
       )}
     </div>
   );
