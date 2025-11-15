@@ -1,5 +1,6 @@
 import { useSpaceGrotesk } from "@/fonts/space_grotesk";
 import { useFetchTask } from "@/hooks/fetchingTask";
+import Card from "@/components/Card";
 export default function Home() {
   const font = useSpaceGrotesk();
   const { data: tasks } = useFetchTask();
@@ -9,6 +10,7 @@ export default function Home() {
     >
       <h1 className="text-6xl font-bold">TodoShyt</h1>
       <p className="text-xl font-light mt-4">Keep your tasks organized</p>
+      <Card />
       {tasks && tasks.length > 0 ? (
         <div className=" flex flex-col p-16">
           {tasks.map((task) => (
