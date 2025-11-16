@@ -51,6 +51,15 @@ export const useTask = () => {
     }
   };
 
+  const updateTask = async (id: number, task: TaskSchema) => {
+    try {
+      await axiosInstance.patch(`/tasks/${id}`, task);
+      await getTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getTasks();
   }, []);
@@ -62,5 +71,6 @@ export const useTask = () => {
     deleteTask,
     getTasks,
     form,
+    updateTask,
   };
 };
