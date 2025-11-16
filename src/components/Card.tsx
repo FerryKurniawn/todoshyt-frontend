@@ -23,7 +23,10 @@ function Card() {
           placeholder="Add details about this task..."
         />
       </div>
-      <button type="submit" className="bg-black py-5 text-white font-bold">
+      <button
+        type="submit"
+        className="bg-black py-5 text-white font-bold rounded-full"
+      >
         Add Task
       </button>
     </form>
