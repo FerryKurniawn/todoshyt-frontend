@@ -16,7 +16,7 @@ export default function Home() {
           {tasks.map((task) => (
             <div
               key={task.id}
-              className="flex flex-col gap-4 shadow-md bg-white mt-6 md:w-[1200px] md:min-h-32 md:max-h-[400px] rounded-xl p-6 hover:shadow-lg"
+              className="flex flex-col gap-4 shadow-md bg-white mt-6 md:w-[1000px] md:min-h-32 md:max-h-[400px] rounded-xl p-6 hover:shadow-lg"
             >
               <h1 className="font-bold text-4xl">{task.taskName}</h1>
               <p className="line-clamp-5 text-lg">{task.description}</p>
