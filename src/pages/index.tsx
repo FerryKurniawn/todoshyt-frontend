@@ -1,5 +1,6 @@
 import { useSpaceGrotesk } from "@/fonts/space_grotesk";
 import { useTask } from "@/hooks/useFetching";
+import FormTask from "@/components/TaskForm";
 import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 
@@ -19,6 +20,17 @@ export default function Home() {
   const [editName, setEditName] = useState("");
   const [editDesc, setEditDesc] = useState("");
   const [checked, setChecked] = useState<{ [key: number]: boolean }>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tasksPerPage] = useState(5);
+
+  const indexOfLastTask = currentPage * tasksPerPage;
+  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+  const currentTasks = tasks
+    ?.slice()
+    .reverse()
+    .slice(indexOfFirstTask, indexOfLastTask);
+
+  const totalPages = tasks ? Math.ceil(tasks.length / tasksPerPage) : 0;
 
   return (
     <div
@@ -26,46 +38,7 @@ export default function Home() {
     >
       <h1 className="text-6xl font-bold">TodoShyt</h1>
       <p className="text-xl font-light mt-4">Keep your tasks organized</p>
-
-      <form
-        key={form.formState.submitCount}
-        onSubmit={form.handleSubmit(addTask)}
-        className="h-[500px] shadow-lg rounded-4xl m-4 p-6 w-[1000px] bg-white flex flex-col gap-8"
-      >
-        <div className="flex flex-col gap-4">
-          <label htmlFor="taskName" className="font-medium">
-            Task Name
-          </label>
-          <input
-            id="taskName"
-            className="p-4 bg-[#FAFAF9] rounded-lg focus:outline-gray-300"
-            type="text"
-            placeholder="What needs to be done?"
-            {...form.register("taskName")}
-          />
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <label htmlFor="description" className="font-medium">
-            Description
-          </label>
-          <textarea
-            id="description"
-            rows={5}
-            className="p-4 bg-[#FAFAF9] rounded-lg focus:outline-gray-300"
-            placeholder="Add details about this task..."
-            {...form.register("description")}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="bg-black py-5 text-white font-bold rounded-full"
-        >
-          Add Task
-        </button>
-      </form>
-
+      <FormTask form={form} addTask={addTask} />
       {loading && (
         <div className="flex items-center justify-center py-10">
           <div className="h-8 w-8 rounded-full border-4 border-gray-300 border-t-black animate-spin" />
@@ -74,7 +47,7 @@ export default function Home() {
 
       {tasks && tasks.length > 0 ? (
         <div className="flex flex-col p-16">
-          {tasks.map((task) => (
+          {currentTasks?.map((task) => (
             <div
               key={task.id}
               onMouseEnter={() => setHover(true)}
@@ -162,6 +135,27 @@ export default function Home() {
               )}
             </div>
           ))}
+          <div className="flex justify-center items-center mt-8">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="bg-black text-white font-bold py-2 px-4 rounded-full disabled:bg-gray-400"
+            >
+              Previous
+            </button>
+            <span className="mx-4">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages || totalPages === 0}
+              className="bg-black text-white font-bold py-2 px-4 rounded-full disabled:bg-gray-400"
+            >
+              Next
+            </button>
+          </div>
         </div>
       ) : (
         <p className="text-xl font-light mt-20">No task nyet.</p>

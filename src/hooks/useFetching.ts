@@ -7,6 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 export const useTask = () => {
   const [tasks, setTasks] = useState<TaskSchema[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalTasks, setTotalTasks] = useState(0);
 
   const form = useForm({
     resolver: zodResolver(taskSchema),
@@ -16,11 +19,22 @@ export const useTask = () => {
     },
   });
 
-  const getTasks = async () => {
+  const getTasks = async (customPage?: number) => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get("/tasks");
-      setTasks(response.data.task);
+
+      const currentPage = customPage || page;
+
+      const response = await axiosInstance.get("/tasks", {
+        params: {
+          page: currentPage,
+          limit,
+        },
+      });
+
+      setTasks(response.data.tasks);
+      setTotalTasks(response.data.totalTasks);
+      setPage(response.data.page);
     } catch (error) {
       console.error(error);
     } finally {
@@ -34,7 +48,7 @@ export const useTask = () => {
       await axiosInstance.post("/tasks", task);
       form.reset({ taskName: "", description: "" });
       form.setFocus("taskName");
-      await getTasks();
+      await getTasks(1);
     } catch (error) {
       console.error(error);
     } finally {
@@ -45,7 +59,7 @@ export const useTask = () => {
   const deleteTask = async (id: number) => {
     try {
       await axiosInstance.delete(`/tasks/${id}`);
-      await getTasks();
+      await getTasks(page);
     } catch (error) {
       console.error(error);
     }
@@ -54,14 +68,14 @@ export const useTask = () => {
   const updateTask = async (id: number, task: TaskSchema) => {
     try {
       await axiosInstance.patch(`/tasks/${id}`, task);
-      await getTasks();
+      await getTasks(page);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    getTasks();
+    getTasks(page);
   }, []);
 
   return {
@@ -72,5 +86,9 @@ export const useTask = () => {
     getTasks,
     form,
     updateTask,
+    page,
+    limit,
+    totalTasks,
+    setPage,
   };
 };
