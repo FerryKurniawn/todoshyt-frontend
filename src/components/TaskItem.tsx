@@ -31,7 +31,7 @@ export default function TaskItem({
             className="scale-130 mt-2"
             checked={checked[task.id] || false}
             onChange={() =>
-              setChecked((prev) => ({
+              setChecked((prev: Record<number, boolean>) => ({
                 ...prev,
                 [task.id]: !prev[task.id],
               }))
@@ -42,7 +42,9 @@ export default function TaskItem({
         {!isEditing ? (
           <div>
             <h1
-              className={`font-bold text-2xl ${checked[task.id] ? "line-through" : ""}`}
+              className={`font-bold text-2xl ${
+                checked[task.id] ? "line-through" : ""
+              }`}
             >
               {task.taskName}
             </h1>
