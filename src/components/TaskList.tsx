@@ -1,11 +1,22 @@
 import { useState } from "react";
 import TaskItem from "./TaskItem";
 import Pagination from "./Pagination";
+import { Task } from "./types";
 
-export default function TaskList({ tasks, deleteTask, updateTask }: any) {
+interface TaskListProps {
+  tasks: Task[];
+  deleteTask: (id: number) => void;
+  updateTask: (id: number, title: string) => void;
+}
+
+export default function TaskList({
+  tasks,
+  deleteTask,
+  updateTask,
+}: TaskListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [checked, setChecked] = useState<{ [key: number]: boolean }>({});
+  const [checked, setChecked] = useState<Record<number, boolean>>({});
   const tasksPerPage = 5;
 
   const reversed = tasks.slice().reverse();
@@ -13,12 +24,12 @@ export default function TaskList({ tasks, deleteTask, updateTask }: any) {
 
   const pageTasks = reversed.slice(
     (currentPage - 1) * tasksPerPage,
-    currentPage * tasksPerPage,
+    currentPage * tasksPerPage
   );
 
   return (
     <div className="flex flex-col p-16">
-      {pageTasks.map((task) => (
+      {pageTasks.map((task: Task) => (
         <TaskItem
           key={task.id}
           task={task}
