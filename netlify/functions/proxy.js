@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 export async function handler(event) {
   const path = event.path.replace("/.netlify/functions/proxy", "");
   const query = event.rawQuery ? `?${event.rawQuery}` : "";
