@@ -1,17 +1,17 @@
 import { axiosInstance } from "@/lib/axios";
 import { useEffect, useState } from "react";
-import { taskSchema, TaskSchema } from "@/lib/taskSchema";
+import { taskSchema, TaskSchema, Task } from "@/lib/taskSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export const useTask = () => {
-  const [tasks, setTasks] = useState<TaskSchema[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalTasks, setTotalTasks] = useState(0);
 
-  const form = useForm({
+  const form = useForm<TaskSchema>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       taskName: "",
@@ -25,7 +25,11 @@ export const useTask = () => {
 
       const currentPage = customPage || page;
 
-      const response = await axiosInstance.get("/tasks", {
+      const response = await axiosInstance.get<{
+        tasks: Task[];
+        totalTasks: number;
+        page: number;
+      }>("/tasks", {
         params: {
           page: currentPage,
           limit,

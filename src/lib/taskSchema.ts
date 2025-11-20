@@ -7,3 +7,4 @@ export const taskSchema = z.object({
 });
 
 export type TaskSchema = z.infer<typeof taskSchema>;
+export type Task = TaskSchema & { id: number };

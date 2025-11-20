@@ -1,12 +1,12 @@
 import { useState } from "react";
 import TaskItem from "./TaskItem";
 import Pagination from "./Pagination";
-import { Task } from "./types";
+import { Task, TaskSchema } from "@/lib/taskSchema";
 
 interface TaskListProps {
   tasks: Task[];
-  deleteTask: (id: number) => void;
-  updateTask: (id: number, title: string) => void;
+  deleteTask: (id: number) => Promise<void> | void;
+  updateTask: (id: number, task: TaskSchema) => Promise<void> | void;
 }
 
 export default function TaskList({
@@ -29,7 +29,7 @@ export default function TaskList({
 
   return (
     <div className="flex flex-col p-16">
-      {pageTasks.map((task: Task) => (
+      {pageTasks.map((task) => (
         <TaskItem
           key={task.id}
           task={task}

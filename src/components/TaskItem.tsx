@@ -1,5 +1,16 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Pencil, Trash } from "lucide-react";
+import { Task, TaskSchema } from "@/lib/taskSchema";
+
+interface TaskItemProps {
+  task: Task;
+  checked: Record<number, boolean>;
+  setChecked: Dispatch<SetStateAction<Record<number, boolean>>>;
+  editingId: number | null;
+  setEditingId: Dispatch<SetStateAction<number | null>>;
+  deleteTask: (id: number) => Promise<void> | void;
+  updateTask: (id: number, task: TaskSchema) => Promise<void> | void;
+}
 
 export default function TaskItem({
   task,
@@ -9,7 +20,7 @@ export default function TaskItem({
   setEditingId,
   deleteTask,
   updateTask,
-}: any) {
+}: TaskItemProps) {
   const [hover, setHover] = useState(false);
   const [editName, setEditName] = useState(task.taskName);
   const [editDesc, setEditDesc] = useState(task.description);

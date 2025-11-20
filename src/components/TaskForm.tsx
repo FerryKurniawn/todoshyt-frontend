@@ -1,14 +1,10 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-
-interface TaskFormValues {
-  taskName: string;
-  description: string;
-}
+import { TaskSchema } from "@/lib/taskSchema";
 
 interface TaskFormProps {
-  form: UseFormReturn<TaskFormValues, any>;
-  addTask: (values: TaskFormValues) => void;
+  form: UseFormReturn<TaskSchema>;
+  addTask: (values: TaskSchema) => Promise<void> | void;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ form, addTask }) => {
